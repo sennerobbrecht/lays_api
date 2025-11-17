@@ -9,9 +9,11 @@ app.get('/api/v1', (req, res) => {
 
 const bagRoutes = require('./routes/bag.routes');
 const userRoutes = require('./routes/user.routes');
+const voteRoutes = require('./routes/vote.routes');
 
 app.use('/api/v1/bag', bagRoutes);
 app.use('/api/v1/user', userRoutes);
+app.use('/api/v1/vote', voteRoutes);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
