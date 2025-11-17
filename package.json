@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/sennerobbrecht/lays_api/issues"
   },
-  "homepage": "https://github.com/sennerobbrecht/lays_api#readme"
+  "homepage": "https://github.com/sennerobbrecht/lays_api#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
 }
