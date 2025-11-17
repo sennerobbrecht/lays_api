@@ -3,6 +3,19 @@ const app = express();
 
 app.use(express.json());
 
+function requireAuth(req, res, next) {
+  const token = req.headers.authorization;
+
+  if (!token) {
+    return res.status(401).json({ error: 'Auth token required' });
+  }
+
+  next();
+}
+
+app.get('/api/v1', (req, res) => {
+  res.send('Lays API v1 is running');
+});
 const bags = [
   {
     id: 1,
@@ -18,13 +31,47 @@ const bags = [
   }
 ];
 
-app.get('/api/v1', (req, res) => {
-  res.send('Lays API v1 is running');
-});
-
 app.get('/api/v1/bag', (req, res) => {
   res.json(bags);
 });
+
+
+app.post('/api/v1/bag', requireAuth, (req, res) => {
+  const {
+    name,
+    image,
+    bagColor,
+    font,
+    pattern,
+    packaging,
+    inspiration,
+    keyFlavours,
+    user
+  } = req.body;
+
+ 
+  if (!name || !image || !bagColor || !font || !pattern || !packaging || !inspiration || !keyFlavours || !user) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+  const newBag = {
+    id: bags.length + 1,
+    name,
+    image,
+    bagColor,
+    font,
+    pattern,
+    packaging,
+    inspiration,
+    keyFlavours,
+    user
+  };
+
+  bags.push(newBag);
+
+  res.status(201).json(newBag);
+});
+
 
 const PORT = process.env.PORT || 4000;
 
