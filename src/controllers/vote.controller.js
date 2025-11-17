@@ -1,7 +1,7 @@
 const votes = require('../data/votes');
 const bags = require('../data/bags');
 
-
+//POST /api/v1/vote/:bag
 exports.createVote = (req, res) => {
   const bagId = Number(req.params.bag);
   const { user } = req.body;
@@ -32,4 +32,27 @@ exports.createVote = (req, res) => {
   votes.push(newVote);
 
   res.status(201).json(newVote);
+};
+
+// DELETE /api/v1/vote/:bag
+exports.deleteVote = (req, res) => {
+  const bagId = Number(req.params.bag);
+  const { user } = req.body;
+
+  if (!user) {
+    return res.status(400).json({ error: 'User is required' });
+  }
+
+  const index = votes.findIndex(v => v.bagId === bagId && v.user === user);
+
+  if (index === -1) {
+    return res.status(404).json({ error: 'Vote not found' });
+  }
+
+  const deleted = votes.splice(index, 1)[0];
+
+  res.json({
+    message: 'Vote removed',
+    vote: deleted
+  });
 };
