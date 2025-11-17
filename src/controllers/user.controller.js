@@ -45,3 +45,28 @@ exports.getUserById = (req, res) => {
 
   res.json(safeUser);
 };
+
+// POST /api/v1/user/auth – login
+exports.authUser = (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password required' });
+  }
+
+  const user = users.find(u => u.email === email);
+
+  if (!user || user.password !== password) {
+    return res.status(401).json({ error: 'Invalid email or password' });
+  }
+
+ 
+  const token = `user-${user.id}-token`;
+
+  const { password: _, ...safeUser } = user;
+
+  res.json({
+    token,
+    user: safeUser
+  });
+};
