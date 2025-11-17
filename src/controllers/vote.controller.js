@@ -56,3 +56,8 @@ exports.deleteVote = (req, res) => {
     vote: deleted
   });
 };
+
+// GET /api/v1/vote 
+exports.getAllVotes = (req, res) => {
+  res.json(votes);
+};
