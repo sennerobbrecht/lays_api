@@ -37,6 +37,17 @@ app.get('/api/v1/bag', (req, res) => {
   res.json(bags);
 });
 
+//get:id  api/v1/bag:id
+app.get('/api/v1/bag/:id', (req, res) => {
+  const bag = bags.find(b => b.id == req.params.id);
+
+  if (!bag) return res.status(404).json({ error: 'Bag not found' });
+
+  res.json(bag);
+});
+
+
+
 //post api/v1/bag
 app.post('/api/v1/bag', requireAuth, (req, res) => {
   const {
