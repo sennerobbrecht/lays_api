@@ -46,6 +46,50 @@ app.get('/api/v1/bag/:id', (req, res) => {
   res.json(bag);
 });
 
+// put api/v1/bag:id
+
+app.put('/api/v1/bag/:id', requireAuth, (req, res) => {
+  const id = Number(req.params.id);
+
+  const bagIndex = bags.findIndex(b => b.id === id);
+  if (bagIndex === -1) {
+    return res.status(404).json({ error: 'Bag not found' });
+  }
+
+  const {
+    name,
+    image,
+    bagColor,
+    font,
+    pattern,
+    packaging,
+    inspiration,
+    keyFlavours,
+    user
+  } = req.body;
+
+
+  if (!name || !image || !bagColor || !font || !pattern || !packaging || !inspiration || !keyFlavours || !user) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+  const updatedBag = {
+    id,
+    name,
+    image,
+    bagColor,
+    font,
+    pattern,
+    packaging,
+    inspiration,
+    keyFlavours,
+    user
+  };
+
+  bags[bagIndex] = updatedBag;
+
+  res.json(updatedBag);
+});
 
 
 //post api/v1/bag
