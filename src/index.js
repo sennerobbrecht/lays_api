@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 
 app.use(express.json());
-
+//auth middleware
 function requireAuth(req, res, next) {
   const token = req.headers.authorization;
 
@@ -12,6 +12,17 @@ function requireAuth(req, res, next) {
 
   next();
 }
+//admin middleware
+function requireAdmin(req, res, next) {
+  const token = req.headers.authorization;
+
+  if (token !== 'admin') {
+    return res.status(403).json({ error: 'Admin privileges required' });
+  }
+
+  next();
+}
+
 //test of het werkt.
 app.get('/api/v1', (req, res) => {
   res.send('Lays API v1 is running');
@@ -89,6 +100,24 @@ app.put('/api/v1/bag/:id', requireAuth, (req, res) => {
   bags[bagIndex] = updatedBag;
 
   res.json(updatedBag);
+});
+
+
+// DELETE api/v1/bag/:id (admin)
+app.delete('/api/v1/bag/:id', requireAuth, requireAdmin, (req, res) => {
+  const id = Number(req.params.id);
+
+  const bagIndex = bags.findIndex(b => b.id === id);
+  if (bagIndex === -1) {
+    return res.status(404).json({ error: 'Bag not found' });
+  }
+
+  const deletedBag = bags.splice(bagIndex, 1)[0];
+
+  res.json({
+    message: 'Bag deleted',
+    bag: deletedBag
+  });
 });
 
 
