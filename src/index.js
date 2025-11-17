@@ -12,10 +12,12 @@ function requireAuth(req, res, next) {
 
   next();
 }
-
+//test of het werkt.
 app.get('/api/v1', (req, res) => {
   res.send('Lays API v1 is running');
 });
+
+//get   api/v1/bag
 const bags = [
   {
     id: 1,
@@ -35,7 +37,7 @@ app.get('/api/v1/bag', (req, res) => {
   res.json(bags);
 });
 
-
+//post api/v1/bag
 app.post('/api/v1/bag', requireAuth, (req, res) => {
   const {
     name,
