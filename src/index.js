@@ -5,11 +5,10 @@ const connectDB = require('./config/db');
 const app = express();
 app.use(express.json());
 
-// Connect MongoDB
 connectDB();
 
-// Routes
-app.use('/api/v1/bag', require('./routes/bag.routes'));
+const bagRoutes = require('./routes/bag.routes');
+app.use('/api/v1/bag', bagRoutes);
 
 app.get('/', (req, res) => {
   res.send('Lays API v1 running');
