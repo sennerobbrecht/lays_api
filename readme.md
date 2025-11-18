@@ -49,4 +49,4 @@ Authorization: Bearer <JWT_TOKEN>
 
 Voor admin routes moet isAdmin = true staan in de token.
 
-https://lays-api-d7ar.onrender.com
+https://lays-api-1.onrender.com
