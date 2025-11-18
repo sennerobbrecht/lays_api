@@ -13,6 +13,8 @@ app.use('/api/v1/bag', bagRoutes);
 const userRoutes = require('./routes/user.routes');
 app.use('/api/v1/user', userRoutes);
 
+app.use('/api/v1/vote', require('./routes/vote.routes'));
+
 
 app.get('/', (req, res) => {
   res.send('Lays API v1 running');
