@@ -44,9 +44,13 @@ exports.removeVote = async (req, res) => {
 
 exports.getAllVotes = async (req, res) => {
   try {
-    const votes = await Vote.find().populate("user email").populate("bag name");
+    const votes = await Vote.find()
+      .select("user bag")
+      .lean();
+
     res.json(votes);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("getAllVotes error:", error);
+    res.status(500).json({ error: "Failed to fetch votes" });
   }
 };
