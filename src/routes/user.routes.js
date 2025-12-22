@@ -1,12 +1,27 @@
 const express = require('express');
 const router = express.Router();
 
-const { register, login } = require('../controllers/user.controller');
+const {
+  register,
+  login,
+  getAllUsers,
+  toggleBlockUser
+} = require('../controllers/user.controller');
 
-// POST /api/v1/user/register
+
+const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
+
+
 router.post('/register', register);
 
-// POST /api/v1/user/login
+
 router.post('/login', login);
+
+
+router.get('/', auth, admin, getAllUsers);
+
+
+router.patch('/:id/block', auth, admin, toggleBlockUser);
 
 module.exports = router;

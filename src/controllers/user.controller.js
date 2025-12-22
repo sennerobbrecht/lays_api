@@ -43,9 +43,12 @@ exports.login = async (req, res) => {
 
    
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ error: 'Invalid credentials' });
+        if (!user) return res.status(400).json({ error: 'Invalid credentials' });
+    if (user.isBlocked) {
+  return res.status(403).json({ error: "Account is blocked" });
+}
 
-  
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ error: 'Invalid credentials' });
 
@@ -74,3 +77,20 @@ exports.login = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
+exports.getAllUsers = async (req, res) => {
+  const users = await User.find().select("-password");
+  res.json(users);
+};
+
+
+exports.toggleBlockUser = async (req, res) => {
+  const user = await User.findById(req.params.id);
+  if (!user) return res.status(404).json({ error: "User not found" });
+
+  user.isBlocked = !user.isBlocked;
+  await user.save();
+
+  res.json({ isBlocked: user.isBlocked });
+};
+
