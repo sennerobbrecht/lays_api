@@ -1,34 +1,46 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors'); 
-const connectDB = require('./config/db');
+require("dotenv").config()
+const express = require("express")
+const cors = require("cors")
+const http = require("http")
+const { Server } = require("socket.io")
+const connectDB = require("./config/db")
 
-const app = express();
-
+const app = express()
 
 app.use(
   cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
   })
-);
+)
 
+app.options("*", cors())
+app.use(express.json())
 
-app.options('*', cors());
+connectDB()
 
+app.use("/api/v1/bag", require("./routes/bag.routes"))
+app.use("/api/v1/user", require("./routes/user.routes"))
+app.use("/api/v1/vote", require("./routes/vote.routes"))
 
-app.use(express.json());
+app.get("/", (req, res) => {
+  res.send("Lays API v1 running")
+})
 
-connectDB();
+const server = http.createServer(app)
 
-app.use('/api/v1/bag', require('./routes/bag.routes'));
-app.use('/api/v1/user', require('./routes/user.routes'));
-app.use('/api/v1/vote', require('./routes/vote.routes'));
+const io = new Server(server, {
+  cors: {
+    origin: "*"
+  }
+})
 
-app.get('/', (req, res) => {
-  res.send('Lays API v1 running');
-});
+io.on("connection", socket => {
+  socket.on("disconnect", () => {})
+})
 
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.set("io", io)
+
+const PORT = process.env.PORT || 4000
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`))
