@@ -10,8 +10,9 @@ const app = express()
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:3000",
-  "https://frontend-admin.onrender.com",
-  "https://frontend-public.onrender.com"
+  "https://lays-admin.onrender.com",
+  "https://lays-api-1.onrender.com",
+  "https://lays-configurator-1.onrender.com"
 ]
 
 app.use(
