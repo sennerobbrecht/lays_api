@@ -7,11 +7,26 @@ const connectDB = require("./config/db")
 
 const app = express()
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "https://frontend-admin.onrender.com",
+  "https://frontend-public.onrender.com"
+]
+
 app.use(
   cors({
-    origin: "*",
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true)
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true)
+      } else {
+        callback(new Error("CORS blocked"))
+      }
+    },
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"]
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true
   })
 )
 
@@ -32,7 +47,9 @@ const server = http.createServer(app)
 
 const io = new Server(server, {
   cors: {
-    origin: "*"
+    origin: allowedOrigins,
+    methods: ["GET", "POST"],
+    credentials: true
   }
 })
 
