@@ -12,7 +12,7 @@ const allowedOrigins = [
   "http://localhost:3000",
   "https://lays-admin.onrender.com",
   "https://lays-api-1.onrender.com",
-  "https://lays-configurator-1.onrender.com"
+  "https://lays-configurator1.onrender.com"
 ]
 
 app.use(
